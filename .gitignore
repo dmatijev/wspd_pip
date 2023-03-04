@@ -11,6 +11,12 @@ __pycache__/
 # tilde files
 *~
 
+# binary files
+*.o
+
+# wspd
+wspd 
+
 # Distribution / packaging
 .Python
 build/
