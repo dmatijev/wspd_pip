@@ -5,11 +5,6 @@ algorithm for computing a partial fair split tree of a point set presented in th
 done in C++. In addition, we published it as a Python package on PyPi that can be easily accessed on Windows, Linux, or macOS by researchers 
 and students worldwide (with Python version >= 3.7). 
 
-To compile directly C++ project /src use provided Makefile and simple type
-
-```
-make
-```
 
 To use WSPD as a Python package, simple run 
 
