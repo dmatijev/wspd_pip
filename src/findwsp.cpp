@@ -123,7 +123,7 @@ int wellsep(tree_node *tnode1, tree_node *tnode2, double s,
   distance = distance - 2*radius;
   actual_s = radius == 0 ? -1 : distance / radius;
 
-  if (distance > s*radius)
+  if (distance >= s*radius*2)
     return (1);
   else
     return (0);
