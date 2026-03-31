@@ -71,8 +71,46 @@ def test_build_wspd_tup_np_matches_build_wspd_np():
         np.testing.assert_array_equal(b_pairs[i], nr)
 
 
+def test_build_wspd_flat_np_return_type():
+    pts = make_points()
+    result = wspd.build_wspd_flat_np(len(pts), 2, 2.0, pts)
+    assert isinstance(result, tuple)
+    assert len(result) == 4
+    a_flat, b_flat, a_offsets, b_offsets = result
+    for arr in result:
+        assert isinstance(arr, np.ndarray)
+        assert arr.ndim == 1
+        assert arr.dtype == np.int32
+
+
+def test_build_wspd_flat_np_offsets_start_at_zero():
+    pts = make_points()
+    _, _, a_offsets, b_offsets = wspd.build_wspd_flat_np(len(pts), 2, 2.0, pts)
+    assert a_offsets[0] == 0
+    assert b_offsets[0] == 0
+
+
+def test_build_wspd_flat_np_matches_tup_np():
+    pts = make_points()
+    a_flat, b_flat, a_offsets, b_offsets = wspd.build_wspd_flat_np(len(pts), 2, 2.0, pts)
+    a_pairs, b_pairs = wspd.build_wspd_tup_np(len(pts), 2, 2.0, pts)
+    assert len(a_offsets) == len(a_pairs)
+    assert len(b_offsets) == len(b_pairs)
+    for i, (a, b) in enumerate(zip(a_pairs, b_pairs)):
+        a_start = a_offsets[i]
+        a_end   = a_offsets[i + 1] if i + 1 < len(a_offsets) else len(a_flat)
+        b_start = b_offsets[i]
+        b_end   = b_offsets[i + 1] if i + 1 < len(b_offsets) else len(b_flat)
+        np.testing.assert_array_equal(a_flat[a_start:a_end], a)
+        np.testing.assert_array_equal(b_flat[b_start:b_end], b)
+
+
 test_build_wspd_returns_lists()
 test_build_wspd_np_returns_numpy_arrays()
 test_both_functions_return_same_indices()
 test_build_wspd_tup_np_return_type()
 test_build_wspd_tup_np_matches_build_wspd_np()
+test_build_wspd_flat_np_return_type()
+test_build_wspd_flat_np_offsets_start_at_zero()
+test_build_wspd_flat_np_matches_tup_np()
+
