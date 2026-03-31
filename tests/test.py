@@ -43,6 +43,36 @@ def test_both_functions_return_same_indices():
         assert list(nr) == lr
 
 
+def test_build_wspd_tup_np_return_type():
+    pts = make_points()
+    result = wspd.build_wspd_tup_np(len(pts), 2, 2.0, pts)
+    assert isinstance(result, tuple)
+    assert len(result) == 2
+    a_pairs, b_pairs = result
+    assert isinstance(a_pairs, list)
+    assert isinstance(b_pairs, list)
+    assert len(a_pairs) == len(b_pairs)
+    for arr in a_pairs:
+        assert isinstance(arr, np.ndarray)
+        assert arr.dtype == np.int32
+    for arr in b_pairs:
+        assert isinstance(arr, np.ndarray)
+        assert arr.dtype == np.int32
+
+
+def test_build_wspd_tup_np_matches_build_wspd_np():
+    pts = make_points()
+    result_np = wspd.build_wspd_np(len(pts), 2, 2.0, pts)
+    a_pairs, b_pairs = wspd.build_wspd_tup_np(len(pts), 2, 2.0, pts)
+    assert len(a_pairs) == len(result_np)
+    assert len(b_pairs) == len(result_np)
+    for i, (nl, nr) in enumerate(result_np):
+        np.testing.assert_array_equal(a_pairs[i], nl)
+        np.testing.assert_array_equal(b_pairs[i], nr)
+
+
 test_build_wspd_returns_lists()
 test_build_wspd_np_returns_numpy_arrays()
 test_both_functions_return_same_indices()
+test_build_wspd_tup_np_return_type()
+test_build_wspd_tup_np_matches_build_wspd_np()
