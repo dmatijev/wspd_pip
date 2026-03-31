@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
+#include <functional>
 #include <vector>
 //#include "Timer.h"
 using namespace std;
@@ -29,6 +30,8 @@ struct list{
 //typedef list *list_set;              /* set of d=dim lists        */
 using list_set = list*;
 using dumbell_list = vector< pair< vector<int>, vector<int> > >;
+using Points = vector<point*>;
+using pair_callback = std::function<void(Points&, Points&)>;
 struct list_set_elt {
   list_set data;                     /* set of d=dim lists        */
   int count;                         /* how many items in this list */
@@ -66,6 +69,8 @@ struct tree_node{
 
 dumbell_list run_wspd(int num, int dim, double sep_const, 
               vector<point>& pts);
+void run_wspd_cb(int num, int dim, double sep_const,
+                 vector<point>& pts, pair_callback cb);
 vector<point> GeneratePoints(int num, int dim);
 void SortPoints(point *, int num, int dim, list *sorted_list);
 void ListCopy(list *l_orig, list *l_copy, int num);
@@ -74,4 +79,5 @@ tree_node *BuildTree(list_set ls, int num, int dim);
 
 int FindWSP(tree_node *tnode, double s, int dim, 
            dumbell_list& dumbells);
+int FindWSP_cb(tree_node *tnode, double s, int dim, pair_callback& cb);
 double upper_bound(int n, int d, double s);

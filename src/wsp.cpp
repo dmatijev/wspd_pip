@@ -8,75 +8,54 @@
 
 int count_depth = 0;
 /*****************/
-/*** RunWSPD ***/
+/*** RunWSPD    ***/
 /*****************/
-dumbell_list run_wspd(int num, int dim, double sep_const, vector<point>& pts)
+
+// Core implementation: runs the algorithm and invokes cb(left_pts, right_pts) for
+// every well-separated pair found. run_wspd delegates to this function.
+void run_wspd_cb(int num, int dim, double sep_const,
+                 vector<point>& pts, pair_callback cb)
 {
-  for (long unsigned i= 0; i<pts.size(); i++)
+  for (long unsigned i = 0; i < pts.size(); i++)
       pts[i].index = i;
 
   sort(pts.begin(), pts.end());
-  pts.resize(unique(pts.begin(), pts.end())-pts.begin());
-  //cout << "Unique size: " << pts.size() << endl;
+  pts.resize(unique(pts.begin(), pts.end()) - pts.begin());
   num = pts.size();
-  //Timer timer;  
-  dumbell_list dumbells;
-//  for (long unsigned i= 0; i<pts.size(); i++)
-//      pts[i].index = i;
-    
-  //list_set orders;
-  //orders = (list *)malloc(sizeof(list) * dim);
+
   vector<list> orders(dim);
-  //cout << "num = " << num << " dim = " << dim << " s = " << sep_const << endl;
-    //for (auto p : pts)
-    //    cout << p.coord[0] << " "  << p.coord[1] << endl;
-    
-
-  /* generate sorted lists */
-  /* printf("Sorting points...\n"); */
-  // cout << "Sorting points ... " <<endl;
-  //timer.start();
-  for(int i = 0; i < dim; i++)
+  for (int i = 0; i < dim; i++)
     SortPoints(pts.data(), num, i, &(orders[i]));
-  for (auto &x: orders)
+  for (auto& x : orders)
       x.mem = x.first;
-  //timer.stop();
-  //cout << "done in " << timer.secs() << " secs" <<  endl;
 
-
-  /* recursive call to BuildTree */
-  /* printf("Building fair split-tree...\n"); */
-  //cout << "Building Tree ... " << endl;
-  //timer.start();
-  list *orders_p = (list *)malloc(sizeof(list) * dim);
+  list* orders_p = (list*)malloc(sizeof(list) * dim);
   memcpy(orders_p, orders.data(), sizeof(list) * dim);
   tree_node* root = BuildTree(orders_p, num, dim);
-  //timer.stop();
-  //cout << "done in " << timer.secs() << " secs" <<  endl;
 
-  /* PrintTree(root, dim, 0); */
+  FindWSP_cb(root, sep_const, dim, cb);
 
-  /* recursive call to FindWSP */
-  /* printf("Finding well-separated pairs...\n"); */
-  //cout << "Finding pairs ..." << endl;
-  //timer.start();
-  int num_wsp = FindWSP(root, sep_const, dim, dumbells);
-  //timer.stop();
-  //cout << "done in " << timer.secs() << " secs" <<  endl;  
-  //printf("%lf, %d;\n", sep_const, num_wsp);
-  //cout << "Upper bound on the number of WS pairs: " << upper_bound(num, dim, sep_const) << endl;
-
-  // FREE THE TREE
+  // free the tree
   vector<tree_node*> to_free = { root };
-  for (int i = 0; i < to_free.size(); ++i)
+  for (int i = 0; i < (int)to_free.size(); ++i)
       if (to_free[i]) {
-	  to_free.push_back(to_free[i] -> lchild);
-	  to_free.push_back(to_free[i] -> rchild);
+          to_free.push_back(to_free[i]->lchild);
+          to_free.push_back(to_free[i]->rchild);
       }
+  for (auto x : to_free)
+      if (x) { free(x->center); free(x); }
+}
 
-  for (auto x: to_free)
-      if (x) { free(x -> center); free(x); }
-  
+dumbell_list run_wspd(int num, int dim, double sep_const, vector<point>& pts)
+{
+  dumbell_list dumbells;
+  run_wspd_cb(num, dim, sep_const, pts,
+      [&dumbells](Points& l, Points& r) {
+          pair<vector<int>, vector<int>> dumbel;
+          for (auto p : l) dumbel.first.push_back(p->index);
+          for (auto p : r) dumbel.second.push_back(p->index);
+          dumbells.push_back(std::move(dumbel));
+      });
   return dumbells;
 }
 
