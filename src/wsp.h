@@ -18,17 +18,15 @@ struct list_elt{
   point *pt;                  /* point represented         */
 };
 
-#define list mylist
-
-struct list{
+struct mylist{
   list_elt *mem;                     /* pointer to memory to free */
   list_elt *first, *last;            /* first and last elements   */
 };                                   /*    of sorted list         */
 
 
 
-//typedef list *list_set;              /* set of d=dim lists        */
-using list_set = list*;
+//typedef mylist *list_set;            /* set of d=dim lists        */
+using list_set = mylist*;
 using dumbell_list = vector< pair< vector<int>, vector<int> > >;
 using Points = vector<point*>;
 using pair_callback = std::function<void(Points&, Points&)>;
@@ -67,12 +65,14 @@ struct tree_node{
 
 /******************************************************************/
 
+dumbell_list run_wspd(int num, int dim, double sep_const, 
+              vector<point>& pts);
 void run_wspd_cb(int num, int dim, double sep_const,
                  vector<point>& pts, pair_callback cb);
 vector<point> GeneratePoints(int num, int dim);
-void SortPoints(point *, int num, int dim, list *sorted_list);
-void ListCopy(list *l_orig, list *l_copy, int num);
-void DoubleLink(list_elt *elt_array, int num, list *linked_list);
+void SortPoints(point *, int num, int dim, mylist *sorted_list);
+void ListCopy(mylist *l_orig, mylist *l_copy, int num);
+void DoubleLink(list_elt *elt_array, int num, mylist *linked_list);
 tree_node *BuildTree(list_set ls, int num, int dim);
 
 int FindWSP_cb(tree_node *tnode, double s, int dim, pair_callback& cb);
