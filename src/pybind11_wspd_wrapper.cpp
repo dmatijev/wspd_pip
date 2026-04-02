@@ -11,7 +11,10 @@ PYBIND11_MODULE(wspd, m)
     m.doc() = "Well-separated pair decomposition (WSPD) plugin"; 
     m.def("build_wspd",
         [](int num, int dim, double sep_const, vector<point>& pts) -> py::list {
-            py::list result;
+            if (num < 1 || dim < 1 || pts.size() < 1) throw std::invalid_argument("num and dim must be positive integers");
+            
+            py::list result(pts.size() - 1);
+
             run_wspd_cb(num, dim, sep_const, pts,
                 [&result](Points& l, Points& r) {
                     py::list arr1, arr2;
@@ -24,7 +27,10 @@ PYBIND11_MODULE(wspd, m)
         "Well Separated Pair Decomposition (WSPD): The build_wspd() function computes WSPD following the original Callahan and Kosaraju O(n log(n)) algorithm. \n Parameters: \n    \t arg0: int  - the size of the dataset  \n  \t arg1: int - the dimension of the dataset \n \t arg2: float - the separation constant S \n  \t arg3: List[point] - list of input points. Note that point is an internal wspd point (wspd.point). \n \n Output: The function outputs the Python list of tuples. Each tuple represents the WSPD realization link, sometimes called the dumbbell. ");
     m.def("build_wspd_np",
         [](int num, int dim, double sep_const, vector<point>& pts) -> py::list {
-            py::list result;
+            if (num < 1 || dim < 1 || pts.size() < 1) throw std::invalid_argument("num and dim must be positive integers");
+
+            py::list result(pts.size() - 1);
+
             run_wspd_cb(num, dim, sep_const, pts,
                 [&result](Points& l, Points& r) {
                     py::array_t<int> arr1(l.size());
@@ -40,8 +46,11 @@ PYBIND11_MODULE(wspd, m)
         "Well Separated Pair Decomposition (WSPD): The build_wspd_np() function computes WSPD following the original Callahan and Kosaraju O(n log(n)) algorithm and returns index arrays as numpy arrays. \n Parameters: \n    \t arg0: int  - the size of the dataset  \n  \t arg1: int - the dimension of the dataset \n \t arg2: float - the separation constant S \n  \t arg3: List[point] - list of input points. Note that point is an internal wspd point (wspd.point). \n \n Output: The function outputs the Python list of tuples. Each tuple represents the WSPD realization link, sometimes called the dumbbell. Unlike build_wspd(), the two index sets in each tuple are returned as numpy arrays instead of lists. ");
     m.def("build_wspd_tup_np",
         [](int num, int dim, double sep_const, vector<point>& pts) -> py::tuple {
-            py::list a_pairs;
-            py::list b_pairs;
+            if (num < 1 || dim < 1 || pts.size() < 1) throw std::invalid_argument("num and dim must be positive integers");
+            
+            py::list a_pairs(pts.size() - 1);
+            py::list b_pairs(pts.size() - 1);
+            
             run_wspd_cb(num, dim, sep_const, pts,
                 [&a_pairs, &b_pairs](Points& l, Points& r) {
                     py::array_t<int> arr1(l.size());
@@ -59,8 +68,9 @@ PYBIND11_MODULE(wspd, m)
     m.def("build_wspd_flat_np",
         [](int num, int dim, double sep_const, vector<point>& pts) -> py::tuple {
             // Accumulate index vectors in a single pass via the callback API.
-            vector<int> a_flat_vec, b_flat_vec;
-            vector<int> a_off_vec, b_off_vec;
+            vector<int> a_flat_vec(pts.size() - 1), b_flat_vec(pts.size() - 1);
+            vector<int> a_off_vec(pts.size() - 1), b_off_vec(pts.size() - 1);
+            
             run_wspd_cb(num, dim, sep_const, pts,
                 [&](Points& l, Points& r) {
                     a_off_vec.push_back(static_cast<int>(a_flat_vec.size()));
