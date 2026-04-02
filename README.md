@@ -9,6 +9,26 @@ To use WSPD as a Python package, simple run
 pip install wspd
 ```
 In Python notebook /example/example.ipynb you can find an easy demonstration of how the wspd module can be used.
+## Citation
+
+If you use this package in your research, please cite the accompanying paper:
+
+Matijević, D. (2024). A Python Package for Well-Separated Pair Decomposition.
+*Journal of Open Research Software*, 12(1), p.1. DOI: [10.5334/jors.465](https://doi.org/10.5334/jors.465)
+
+BibTeX:
+```bibtex
+@article{matijevic2024wspd,
+  title   = {A Python Package for Well-Separated Pair Decomposition},
+  author  = {Matijević, Domagoj},
+  journal = {Journal of Open Research Software},
+  volume  = {12},
+  number  = {1},
+  pages   = {1},
+  year    = {2024},
+  doi     = {10.5334/jors.465}
+}
+```
 
 ## Note on the separation condition
 
