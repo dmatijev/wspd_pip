@@ -75,7 +75,5 @@ void ListCopy(list *l_orig, list *l_copy, int num);
 void DoubleLink(list_elt *elt_array, int num, list *linked_list);
 tree_node *BuildTree(list_set ls, int num, int dim);
 
-int FindWSP(tree_node *tnode, double s, int dim, 
-           dumbell_list& dumbells);
 int FindWSP_cb(tree_node *tnode, double s, int dim, pair_callback& cb);
 double upper_bound(int n, int d, double s);
