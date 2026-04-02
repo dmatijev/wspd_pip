@@ -37,7 +37,7 @@ void run_wspd_cb(int num, int dim, double sep_const,
 
   // free the tree
   vector<tree_node*> to_free = { root };
-  for (int i = 0; i < (int)to_free.size(); ++i)
+  for (size_t i = 0; i < to_free.size(); ++i)
       if (to_free[i]) {
           to_free.push_back(to_free[i]->lchild);
           to_free.push_back(to_free[i]->rchild);
