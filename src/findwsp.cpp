@@ -38,7 +38,6 @@ int dfs(tree_node *tnode, vector<double* >& pt)
 }
 
 // EDIT: get index information
-// Points is defined in wsp.h
 
 int dfs(tree_node *tnode, Points& pts)
 {
