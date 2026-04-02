@@ -67,8 +67,6 @@ struct tree_node{
 
 /******************************************************************/
 
-dumbell_list run_wspd(int num, int dim, double sep_const, 
-              vector<point>& pts);
 void run_wspd_cb(int num, int dim, double sep_const,
                  vector<point>& pts, pair_callback cb);
 vector<point> GeneratePoints(int num, int dim);

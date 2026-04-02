@@ -12,7 +12,7 @@ int count_depth = 0;
 /*****************/
 
 // Core implementation: runs the algorithm and invokes cb(left_pts, right_pts) for
-// every well-separated pair found. run_wspd delegates to this function.
+// every well-separated pair found.
 void run_wspd_cb(int num, int dim, double sep_const,
                  vector<point>& pts, pair_callback cb)
 {
@@ -45,21 +45,6 @@ void run_wspd_cb(int num, int dim, double sep_const,
   for (auto x : to_free)
       if (x) { free(x->center); free(x); }
 }
-
-dumbell_list run_wspd(int num, int dim, double sep_const, vector<point>& pts)
-{
-  dumbell_list dumbells;
-  run_wspd_cb(num, dim, sep_const, pts,
-      [&dumbells](Points& l, Points& r) {
-          pair<vector<int>, vector<int>> dumbel;
-          for (auto p : l) dumbel.first.push_back(p->index);
-          for (auto p : r) dumbel.second.push_back(p->index);
-          dumbells.push_back(std::move(dumbel));
-      });
-  return dumbells;
-}
-
-
 
 
 
