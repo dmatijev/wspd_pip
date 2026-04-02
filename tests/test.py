@@ -1,16 +1,8 @@
 import numpy as np
 import wspd
 
-# The point class is registered with its docstring as the class name (existing behaviour),
-# so we locate it dynamically rather than using wspd.point directly.
-_point_names = [x for x in dir(wspd) if 'point' in x.lower()]
-if not _point_names:
-    raise RuntimeError("wspd module does not expose a 'point' class")
-_point = getattr(wspd, _point_names[0])
-
-
 def make_points(n=5, dim=2):
-    return [_point([float(i) * (j + 1) for j in range(dim)]) for i in range(n)]
+    return [wspd.point([float(i) * (j + 1) for j in range(dim)]) for i in range(n)]
 
 
 def test_build_wspd_returns_lists():
