@@ -23,14 +23,14 @@ void run_wspd_cb(int num, int dim, double sep_const,
   pts.resize(unique(pts.begin(), pts.end()) - pts.begin());
   num = pts.size();
 
-  vector<list> orders(dim);
+  vector<mylist> orders(dim);
   for (int i = 0; i < dim; i++)
     SortPoints(pts.data(), num, i, &(orders[i]));
   for (auto& x : orders)
       x.mem = x.first;
 
-  list* orders_p = (list*)malloc(sizeof(list) * dim);
-  memcpy(orders_p, orders.data(), sizeof(list) * dim);
+  mylist* orders_p = (mylist*)malloc(sizeof(mylist) * dim);
+  memcpy(orders_p, orders.data(), sizeof(mylist) * dim);
   tree_node* root = BuildTree(orders_p, num, dim);
 
   FindWSP_cb(root, sep_const, dim, cb);
@@ -206,7 +206,7 @@ tree_node *BuildTree(list_set ls, int num, int dim){
   }
 
   /* copying the lists */
-  ls_copy = (list *)malloc(sizeof(list) * dim);
+  ls_copy = (mylist *)malloc(sizeof(mylist) * dim);
   for (i=0; i<dim; i++) {
     ListCopy(&(ls[i]), &(ls_copy[i]), num);
     ls[i].mem = ls[i].first;
@@ -249,7 +249,7 @@ tree_node *BuildTree(list_set ls, int num, int dim){
       new_lists_current->next = NULL;
     }
     
-    new_lists_current->data = (list *)malloc(sizeof(list)*dim);
+    new_lists_current->data = (mylist *)malloc(sizeof(mylist)*dim);
     new_lists_current->count = num_smaller;
 
     for (i=0; i<dim; i++) {
@@ -304,7 +304,7 @@ tree_node *BuildTree(list_set ls, int num, int dim){
     new_lists_current = new_lists_current->next;
     new_lists_current->next = NULL;
   }
-  new_lists_current->data = (list *)malloc(sizeof(list) * dim);
+  new_lists_current->data = (mylist *)malloc(sizeof(mylist) * dim);
   new_lists_current->count = total;
   for (i=0; i<dim; i++) {
     ListCopy(&(ls[i]), &(new_lists_current->data[i]), total);

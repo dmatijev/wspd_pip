@@ -27,7 +27,7 @@ bool ListEltCompare(const list_elt& le1, const list_elt& le2){
 /*** DoubleLink ***/
 /******************/
 
-void DoubleLink(list_elt *elt_array, int num, list *linked_list) {
+void DoubleLink(list_elt *elt_array, int num, mylist *linked_list) {
   int i;
   
   for(i = 0; i < num; i++) {
@@ -49,7 +49,7 @@ void DoubleLink(list_elt *elt_array, int num, list *linked_list) {
 /*** SortPoints ***/
 /******************/
 
-void SortPoints(point *pts, int num, int dim, list *sorted_list){
+void SortPoints(point *pts, int num, int dim, mylist *sorted_list){
   int i;
   list_elt *sorted_list_elt;
 
@@ -75,7 +75,7 @@ void SortPoints(point *pts, int num, int dim, list *sorted_list){
 /* note this does one important thing besides copying:
    it sets the new_list field to null for all points */
 
-void ListCopy(list *l_orig, list *l_copy, int num){
+void ListCopy(mylist *l_orig, mylist *l_copy, int num){
   int i;
   list_elt *list_elt_copy, *current;
 
