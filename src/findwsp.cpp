@@ -61,9 +61,15 @@ int FindWSP2_cb(tree_node *tnode1, tree_node *tnode2, double s, int dim,
   double distance, actual_s;
   if (wellsep(tnode1, tnode2, s, dim, distance, actual_s)) {
     Points pts1, pts2;
+
+    pts1.reserve(tnode1->nr_pt);
+    pts2.reserve(tnode2->nr_pt);
+
     dfs(tnode1, pts1);
     dfs(tnode2, pts2);
+
     cb(pts1, pts2);
+
     return 1;
   } else {
     if (tnode1->radius > tnode2->radius)
